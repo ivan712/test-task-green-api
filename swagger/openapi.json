@@ -1,0 +1,186 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Тестовое задание",
+      "version": "1.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000/"
+      }
+    ],
+    "paths": {
+      "/createtask": {
+        "get": {
+          "description": "Создать новое задание",
+          "responses": {
+            "200": {
+              "description": "Задание успешно создано",
+              "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "format": "string",
+                            "example": "Создали задание Id = 810597fd-e50d-4698-aeb1-d8862a54c27c и отправили его в обработку"
+                          }
+                        }
+                      }
+                }
+              }
+            },
+            "500": {
+              "description": "Invalid Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "format": "string",
+                        "example": "Invalid Server Error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/gettaskbyid": {
+        "get": {
+          "description": "Получить задание по Id",
+          "parameters": [
+            {
+              "name": "taskid",
+              "in": "query",
+              "required": true,
+              "description": "Id задания",
+              "schema": {
+                "type": "string",
+                "example": "810597fd-e50d-4698-aeb1-d8862a54c27c"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Информация о задании",
+              "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "format": "string",
+                            "example": "64c6cfd0c3fe3a72f349162f"
+                          },
+                          "taskId": {
+                            "type": "string",
+                            "format": "string",
+                            "example": "810597fd-e50d-4698-aeb1-d8862a54c27c"
+                          },
+                          "status": {
+                            "type": "string",
+                            "format": "string",
+                            "example": "success"
+                          }
+                        }
+                      }
+                }
+              }
+            },
+            "404": {
+                "description": "Задание не найдено",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "format": "string",
+                          "example": "Задание не найдено"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+            "500": {
+              "description": "Invalid Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "format": "string",
+                        "example": "Invalid Server Error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/getalltasks": {
+        "get": {
+          "description": "Получить все задания",
+          "responses": {
+            "200": {
+              "description": "Информация о заданиях",
+              "content": {
+                "application/json": {
+                    "schema": {
+                        "type":"array",
+                        "items":{
+                            "type":"object",
+                            "properties":{
+                                "_id":{
+                                    "type":"string",
+                                    "example": "64c6cfd0c3fe3a72f349162f"
+                                },
+                                "taskId":{
+                                    "type":"string",
+                                    "example": "810597fd-e50d-4698-aeb1-d8862a54c27c"
+                                },
+                                "status":{
+                                    "type":"string",
+                                    "example": "status"
+                                }
+                            }
+                        }
+                    }
+                }
+              }
+            },
+            "500": {
+              "description": "Invalid Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "format": "string",
+                        "example": "Invalid Server Error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }

@@ -1,0 +1,77 @@
+version: "3.2"
+services:
+  server1:
+    image: node:latest
+    networks:
+      - backend
+    volumes:
+      - ./logs/server1Log.log:/app/logs/server1Log.log
+      - ./libs:/app/libs
+      - ./middlwares:/app/middlwares
+      - ./node_modules:/app/node_modules
+      - ./models:/app/models
+      - ./index.js:/app/index.js
+      - ./logger.js:/app/logger.js
+      - ./swagger:/app/swagger
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+      - ./server1.js:/app/server1.js
+      - ./config.js:/app/config.js
+    container_name: server1
+    tty: true
+    working_dir: /app
+    ports: 
+      - 3000:3000
+    command: npm run devStart
+    depends_on:
+      - mongo
+      - server2
+
+  server2:
+    image: node:latest
+    networks:
+      - backend
+    volumes:
+      - ./node_modules:/app/node_modules
+      - ./libs:/app/libs
+      - ./logs/server2Log.log:/app/logs/server2Log.log
+      - ./server2.js:/app/server2.js
+      - ./config.js:/app/config.js
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+      - ./logger.js:/app/logger.js
+    container_name: server2
+    tty: true
+    working_dir: /app
+    command: node server2.js
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  mongo:
+    image: mongo
+    networks:
+      - backend
+    # ports: 
+    #   - 27017:27017
+    volumes: 
+      - ./mongoDbData:/data/db
+    container_name: mongo
+
+  rabbitmq:
+    image: rabbitmq:latest
+    networks:
+      - backend
+    # ports:
+    #   - 15672:15672
+    volumes:
+      - './rabbitmqData:/var/lib/rabbitmq/mnesia/'
+    container_name: rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 10s
+networks:
+  backend:
